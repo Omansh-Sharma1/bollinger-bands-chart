@@ -145,6 +145,11 @@ Tested with KLineCharts v2.x
 - Tailwind + React provides a clean way to replicate TradingView-style panels without pixel-perfect matching.
 
 ## Screenshots / GIF
-Include 2 screenshots or a short GIF showing:
-- Candlestick chart with Bollinger Bands applied
-- Settings modal open with Inputs/Style tabs
+
+**Candlestick chart with Bollinger Bands applied**  
+<img width="1904" height="777" alt="chart" src="https://github.com/user-attachments/assets/9b4e85c6-864c-44e2-99bb-497dfa3d6772" />
+
+**Settings modal open with Inputs/Style tabs**  
+<div style="display: flex; gap: 10px;">
+  <img width="522" height="390" alt="modal 1" src="https://github.com/user-attachments/assets/d038eeba-84a5-44f2-a327-70ccb289fe6e" />
+</div>
