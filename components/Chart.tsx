@@ -39,27 +39,24 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
 
     chart.applyNewData(klineData);
 
-    registerIndicator(
-      {
-        name: "bollinger",
-        shortName: "BOLL",
-        calcParams: [bbOptions.length, bbOptions.stdDevMultiplier, bbOptions.source, bbOptions.offset],
-        figures: [
-          { key: "BOLL", title: "Basis", type: "line" },
-          { key: "UPPER", title: "Upper", type: "line" },
-          { key: "LOWER", title: "Lower", type: "line" },
-        ],
-        calc: (klineData: KLineData[]) => {
-          const { basis, upper, lower } = computeBollingerBands(data, bbOptions);
-          return klineData.map((_, i) => ({
-            BOLL: basis[i],
-            UPPER: upper[i],
-            LOWER: lower[i],
-          }));
-        },
-      },
-      true
-    );
+    registerIndicator({
+  name: "bollinger",
+  shortName: "BOLL",
+  calcParams: [bbOptions.length, bbOptions.stdDevMultiplier],
+  figures: [
+    { key: "BOLL", title: "Basis", type: "line" },
+    { key: "UPPER", title: "Upper", type: "line" },
+    { key: "LOWER", title: "Lower", type: "line" },
+  ],
+  calc: (klineData: KLineData[]) => {
+    const { basis, upper, lower } = computeBollingerBands(data, bbOptions);
+    return klineData.map((_, i) => ({
+      BOLL: basis[i],
+      UPPER: upper[i],
+      LOWER: lower[i],
+    }));
+  },
+});
 
     chart.createIndicator("bollinger", false, { id: "candle_pane" });
   }, [chart, data, bbOptions]);
