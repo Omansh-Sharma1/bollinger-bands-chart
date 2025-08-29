@@ -39,24 +39,33 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
 
     chart.applyNewData(klineData);
 
+    // Register Bollinger Indicator with shading support
     registerIndicator({
-  name: "bollinger",
-  shortName: "BOLL",
-  calcParams: [bbOptions.length, bbOptions.stdDevMultiplier],
-  figures: [
-    { key: "BOLL", title: "Basis", type: "line" },
-    { key: "UPPER", title: "Upper", type: "line" },
-    { key: "LOWER", title: "Lower", type: "line" },
-  ],
-  calc: (klineData: KLineData[]) => {
-    const { basis, upper, lower } = computeBollingerBands(data, bbOptions);
-    return klineData.map((_, i) => ({
-      BOLL: basis[i],
-      UPPER: upper[i],
-      LOWER: lower[i],
-    }));
-  },
-});
+      name: "bollinger",
+      shortName: "BOLL",
+      calcParams: [bbOptions.length, bbOptions.stdDevMultiplier],
+      figures: [
+        { key: "BOLL", title: "Basis", type: "line" },
+        { key: "UPPER", title: "Upper", type: "line" },
+        { key: "LOWER", title: "Lower", type: "line" },
+        {
+          key: "BB_FILL",
+          title: "BB Fill",
+          type: "area", // shaded area between UPPER & LOWER
+          baseValue: "UPPER",
+          value: "LOWER",
+        },
+      ],
+      calc: (klineData: KLineData[]) => {
+        const { basis, upper, lower } = computeBollingerBands(data, bbOptions);
+        return klineData.map((_, i) => ({
+          BOLL: basis[i],
+          UPPER: upper[i],
+          LOWER: lower[i],
+          BB_FILL: [upper[i], lower[i]], // 👈 required for area
+        }));
+      },
+    });
 
     chart.createIndicator("bollinger", false, { id: "candle_pane" });
   }, [chart, data, bbOptions]);
@@ -64,36 +73,39 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
   useEffect(() => {
     if (!chart) return;
 
-    const fillColor = bbOptions.showFill
-      ? `rgba(${parseInt(bbOptions.upperColor.slice(1, 3), 16)}, ${parseInt(
-          bbOptions.upperColor.slice(3, 5),
-          16
-        )}, ${parseInt(bbOptions.upperColor.slice(5, 7), 16)}, ${bbOptions.fillOpacity})`
-      : undefined;
-
     chart.overrideIndicator({
-      id: "bollinger",
+      name: "bollinger",
       styles: {
-        BOLL: {
-          color: bbOptions.middleColor,
-          lineWidth: bbOptions.middleWidth,
-          lineStyle: bbOptions.middleStyle === "solid" ? 0 : 1,
-          visible: bbOptions.showMiddle,
+        lines: {
+          BOLL: {
+            color: bbOptions.middleColor,
+            size: bbOptions.middleWidth,
+            style: bbOptions.middleStyle === "solid" ? "solid" : "dashed",
+            visible: bbOptions.showMiddle,
+          },
+          UPPER: {
+            color: bbOptions.upperColor,
+            size: bbOptions.upperWidth,
+            style: bbOptions.upperStyle === "solid" ? "solid" : "dashed",
+            visible: bbOptions.showUpper,
+          },
+          LOWER: {
+            color: bbOptions.lowerColor,
+            size: bbOptions.lowerWidth,
+            style: bbOptions.lowerStyle === "solid" ? "solid" : "dashed",
+            visible: bbOptions.showLower,
+          },
         },
-        UPPER: {
-          color: bbOptions.upperColor,
-          lineWidth: bbOptions.upperWidth,
-          lineStyle: bbOptions.upperStyle === "solid" ? 0 : 1,
-          visible: bbOptions.showUpper,
-        },
-        LOWER: {
-          color: bbOptions.lowerColor,
-          lineWidth: bbOptions.lowerWidth,
-          lineStyle: bbOptions.lowerStyle === "solid" ? 0 : 1,
-          visible: bbOptions.showLower,
+        area: {
+          BB_FILL: {
+            color: bbOptions.showFill
+              ? `rgba(${parseInt(bbOptions.upperColor.slice(1, 3), 16)}, ${parseInt(
+                  bbOptions.upperColor.slice(3, 5), 16
+                )}, ${parseInt(bbOptions.upperColor.slice(5, 7), 16)}, ${bbOptions.fillOpacity})`
+              : "transparent",
+          },
         },
       },
-      fill: fillColor ? { color: fillColor, opacity: 1 } : undefined,
       calcParams: [bbOptions.length, bbOptions.stdDevMultiplier],
     });
   }, [chart, bbOptions, data]);
@@ -107,4 +119,3 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
 };
 
 export default ChartComponent;
-
