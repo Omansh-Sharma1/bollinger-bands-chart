@@ -348,6 +348,17 @@ The implementation evolved through several iterations:
 - **Data Validation**: Validate input data before calculations
 - **Efficient Rendering**: Minimize style updates to improve performance
 
+## Recording
+
+https://github.com/user-attachments/assets/507e2b65-6af2-47d8-9c95-76b0aa1dad81
+
+## ScreenShots
+
+<img width="494" height="826" alt="Screenshot 2025-08-30 004414" src="https://github.com/user-attachments/assets/9d9f13b8-96f7-4990-85d5-40402ba168b6" />
+<img width="1904" height="777" alt="Screenshot 2025-08-30 004348" src="https://github.com/user-attachments/assets/c2019054-4af9-4c8f-8c28-f72192ccc091" />
+
+
+
 ## Browser Support
 
 - Chrome 80+
