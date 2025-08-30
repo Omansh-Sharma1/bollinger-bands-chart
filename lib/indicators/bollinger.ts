@@ -45,7 +45,6 @@ export function computeBollingerBands(
     lower.push(mean - stdDevMultiplier * stdDev);
   }
 
-  // Apply offset
   if (offset !== 0) {
     const shift = Math.abs(offset);
     if (offset > 0) {

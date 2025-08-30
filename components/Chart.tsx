@@ -38,8 +38,6 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
     }));
 
     chart.applyNewData(klineData);
-
-    // Register Bollinger Indicator with shading support
     registerIndicator({
       name: "bollinger",
       shortName: "BOLL",
@@ -48,13 +46,6 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
         { key: "BOLL", title: "Basis", type: "line" },
         { key: "UPPER", title: "Upper", type: "line" },
         { key: "LOWER", title: "Lower", type: "line" },
-        {
-          key: "BB_FILL",
-          title: "BB Fill",
-          type: "area", // shaded area between UPPER & LOWER
-          baseValue: "UPPER",
-          value: "LOWER",
-        },
       ],
       calc: (klineData: KLineData[]) => {
         const { basis, upper, lower } = computeBollingerBands(data, bbOptions);
@@ -62,7 +53,6 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
           BOLL: basis[i],
           UPPER: upper[i],
           LOWER: lower[i],
-          BB_FILL: [upper[i], lower[i]], // 👈 required for area
         }));
       },
     });
@@ -76,34 +66,23 @@ const ChartComponent: React.FC<ChartProps> = ({ data, bbOptions }) => {
     chart.overrideIndicator({
       name: "bollinger",
       styles: {
-        lines: {
-          BOLL: {
-            color: bbOptions.middleColor,
-            size: bbOptions.middleWidth,
-            style: bbOptions.middleStyle === "solid" ? "solid" : "dashed",
-            visible: bbOptions.showMiddle,
-          },
-          UPPER: {
-            color: bbOptions.upperColor,
-            size: bbOptions.upperWidth,
-            style: bbOptions.upperStyle === "solid" ? "solid" : "dashed",
-            visible: bbOptions.showUpper,
-          },
-          LOWER: {
-            color: bbOptions.lowerColor,
-            size: bbOptions.lowerWidth,
-            style: bbOptions.lowerStyle === "solid" ? "solid" : "dashed",
-            visible: bbOptions.showLower,
-          },
+        BOLL: {
+          color: bbOptions.middleColor,
+          lineWidth: bbOptions.middleWidth,
+          lineStyle: bbOptions.middleStyle === "solid" ? 0 : 1, // 0 = solid, 1 = dashed
+          visible: bbOptions.showMiddle,
         },
-        area: {
-          BB_FILL: {
-            color: bbOptions.showFill
-              ? `rgba(${parseInt(bbOptions.upperColor.slice(1, 3), 16)}, ${parseInt(
-                  bbOptions.upperColor.slice(3, 5), 16
-                )}, ${parseInt(bbOptions.upperColor.slice(5, 7), 16)}, ${bbOptions.fillOpacity})`
-              : "transparent",
-          },
+        UPPER: {
+          color: bbOptions.upperColor,
+          lineWidth: bbOptions.upperWidth,
+          lineStyle: bbOptions.upperStyle === "solid" ? 0 : 1,
+          visible: bbOptions.showUpper,
+        },
+        LOWER: {
+          color: bbOptions.lowerColor,
+          lineWidth: bbOptions.lowerWidth,
+          lineStyle: bbOptions.lowerStyle === "solid" ? 0 : 1,
+          visible: bbOptions.showLower,
         },
       },
       calcParams: [bbOptions.length, bbOptions.stdDevMultiplier],

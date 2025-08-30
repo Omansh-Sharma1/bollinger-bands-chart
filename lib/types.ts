@@ -1,4 +1,3 @@
-// /lib/types.ts
 export interface OHLCV {
   timestamp: number; // milliseconds
   open: number;

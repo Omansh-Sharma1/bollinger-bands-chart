@@ -48,7 +48,6 @@ export default function Home() {
 
         <ChartComponent data={data} bbOptions={bbOptions} />
 
-        {/* Settings Button */}
         <div className="flex justify-end">
           <button
             onClick={() => setShowSettings(true)}
@@ -57,8 +56,6 @@ export default function Home() {
             ⚙️ Settings
           </button>
         </div>
-
-        {/* Settings Modal */}
         {showSettings && (
           <BollingerSettings 
             bbOptions={bbOptions} 
