@@ -371,8 +371,4 @@ The implementation evolved through several iterations:
 - Update documentation for API changes
 - Ensure responsive design compatibility
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 **Happy Trading! 📈**
